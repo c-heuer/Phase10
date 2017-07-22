@@ -11,16 +11,50 @@ import XCTest
 
 class Phase10Tests: XCTestCase {
     
+    var game = Game()
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        let player = Player()
+        player.name = "Omchen"
+        
+        let result = RoundResult()
+        result.round = 1
+        result.roundCompleted = true
+        result.score = 10
+        
+        player.rounds.append(result)
+        
+        game.players.append(player)
+        
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        game.players.removeAll()
+        
         super.tearDown()
     }
     
+    func testModel() {
+        XCTAssert(game.players.count == 1, "Count of Players <> 1")
+        XCTAssert(game.players.first?.name == "Omchen", "Name of Player not Omchen")
+        XCTAssert(game.players.first?.phase() == 2, "Player not in Phase 2")
+        XCTAssert(game.players.first?.score() == 10, "Players score <> 10")
+    }
+    
+    func testRound() {
+        let result = RoundResult()
+        result.round = 2
+        result.roundCompleted = true
+        result.score = 0
+        
+        game.players.first?.rounds.append(result)
+        
+        XCTAssert(game.players.first?.phase() == 3, "Player did not advance Round")
+        XCTAssert(game.players.first?.score() == 10, "Score not 10")
+        
+    }
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
